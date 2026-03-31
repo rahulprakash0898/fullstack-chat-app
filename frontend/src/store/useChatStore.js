@@ -14,9 +14,11 @@ export const useChatStore = create((set, get) => ({
     set({ isUsersLoading: true });
     try {
       const res = await axiosInstance.get("/messages/users");
-      set({ users: res.data });
+      // Safeguard: Ensure res.data is an array (in case a proxy returns HTML or an object)
+      const dataArray = Array.isArray(res.data) ? res.data : [];
+      set({ users: dataArray });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Error fetching users");
     } finally {
       set({ isUsersLoading: false });
     }
@@ -26,9 +28,10 @@ export const useChatStore = create((set, get) => ({
     set({ isMessagesLoading: true });
     try {
       const res = await axiosInstance.get(`/messages/${userId}`);
-      set({ messages: res.data });
+      const dataArray = Array.isArray(res.data) ? res.data : [];
+      set({ messages: dataArray });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Error fetching messages");
     } finally {
       set({ isMessagesLoading: false });
     }
