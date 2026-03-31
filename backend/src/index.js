@@ -15,12 +15,9 @@ dotenv.config();
 const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve();
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://frontend-chat-app-hovj.onrender.com"
-];
+const allowedOrigins = ["http://localhost:5173", "https://frontend-chat-app-hovj.onrender.com"];
 
 app.use(
   cors({
