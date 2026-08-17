@@ -36,13 +36,16 @@ app.use("/api/messages", messageRoutes);
 
 const distPath = path.resolve(__dirname, "../../frontend/dist");
 
-if (process.env.NODE_ENV === "production" || fs.existsSync(distPath)) {
-  app.use(express.static(distPath));
+app.use(express.static(distPath));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
-  });
-}
+app.get("*", (req, res) => {
+  const indexPath = path.resolve(distPath, "index.html");
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send("Frontend build not found. Please ensure 'npm run build' has executed successfully.");
+  }
+});
 
 server.listen(PORT, () => {
   console.log("server is running on PORT:" + PORT);
