@@ -38,7 +38,7 @@ const distPath = path.resolve(__dirname, "../../frontend/dist");
 
 app.use(express.static(distPath));
 
-app.get("*", (req, res) => {
+app.get("{*splat}", (req, res) => {
   const indexPath = path.resolve(distPath, "index.html");
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
