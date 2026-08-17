@@ -12,6 +12,8 @@ import { app, server } from "./lib/socket.js";
 
 import { fileURLToPath } from "url";
 
+import fs from "fs";
+
 dotenv.config();
 
 const PORT = process.env.PORT || 5001;
@@ -32,11 +34,13 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+const distPath = path.resolve(__dirname, "../../frontend/dist");
+
+if (process.env.NODE_ENV === "production" || fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../../frontend/dist/index.html"));
+    res.sendFile(path.resolve(distPath, "index.html"));
   });
 }
 
